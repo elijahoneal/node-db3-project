@@ -18,8 +18,10 @@ function find() { // EXERCISE A
     Return from this function the resulting dataset.
   */
  return db('schemes as sc')
- .leftjoin('steps as st', 'sc.scheme_id', 'st.scheme_id')
- .select('sc' , 'count(st.step_id) as number_of_steps');
+ .join('steps as st', 'sc.scheme_id', 'st.scheme_id')
+ .select('*' , 'st.step_id as number_of_steps')
+ .groupBy('sc.scheme_id')
+ .orderBy('sc.scheme_id', 'ASC')
 }
 
 function findById(scheme_id) { // EXERCISE B
