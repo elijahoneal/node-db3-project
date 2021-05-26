@@ -1,3 +1,5 @@
+const db = require('../../data/db-config')
+
 function find() { // EXERCISE A
   /*
     1A- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`.
@@ -15,10 +17,22 @@ function find() { // EXERCISE A
     2A- When you have a grasp on the query go ahead and build it in Knex.
     Return from this function the resulting dataset.
   */
+ return db('schemes as sc')
+ .join('steps as st', 'sc.scheme_id', 'st.scheme_id')
+ .select('*' , 'st.step_id as number_of_steps')
+ .groupBy('sc.scheme_id')
+ .orderBy('sc.scheme_id', 'ASC')
 }
 
 function findById(scheme_id) { // EXERCISE B
-  /*
+
+  return db('schemes as sc')
+  .join('steps as st', 'sc.scheme_id', 'st.scheme_id')
+  .select('sc.scheme_name'  , '*')
+  .where({"sc.scheme_id": scheme_id})
+  .orderBy('st.step_number', 'ASC')
+
+     /*
     1B- Study the SQL query below running it in SQLite Studio against `data/schemes.db3`:
 
       SELECT
@@ -29,6 +43,7 @@ function findById(scheme_id) { // EXERCISE B
           ON sc.scheme_id = st.scheme_id
       WHERE sc.scheme_id = 1
       ORDER BY st.step_number ASC;
+      
 
     2B- When you have a grasp on the query go ahead and build it in Knex
     making it parametric: instead of a literal `1` you should use `scheme_id`.
@@ -83,6 +98,10 @@ function findById(scheme_id) { // EXERCISE B
         "steps": []
       }
   */
+ 
+
+ 
+ 
 }
 
 function findSteps(scheme_id) { // EXERCISE C
@@ -106,12 +125,14 @@ function findSteps(scheme_id) { // EXERCISE C
         }
       ]
   */
+//  return db('steps').where('scheme_id', scheme_id).orderBy('step_number',' ASC')
 }
 
 function add(scheme) { // EXERCISE D
   /*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
   */
+ return db('schemes').insert(scheme).then(ids => ids[0])
 }
 
 function addStep(scheme_id, step) { // EXERCISE E
@@ -120,6 +141,7 @@ function addStep(scheme_id, step) { // EXERCISE E
     and resolves to _all the steps_ belonging to the given `scheme_id`,
     including the newly created one.
   */
+//  return db('steps').insert(step).where('scheme_id', scheme_id)
 }
 
 module.exports = {
